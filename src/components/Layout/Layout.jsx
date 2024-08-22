@@ -14,3 +14,5 @@ Layout.propTypes = {
   children: PropTypes.object,
   onCloseSideBar: PropTypes.func,
 };
+
+export default Layout;
