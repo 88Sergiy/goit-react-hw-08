@@ -11,7 +11,7 @@ function Layout({ onCloseSideBar, children }) {
 }
 
 Layout.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.node,
   onCloseSideBar: PropTypes.func,
 };
 
