@@ -10,12 +10,9 @@ import TemporaryDrawer from './components/Drawer/Drawer';
 import { RestrictedRoute } from './RestrictedRoute';
 import { PrivateRoute } from './PrivateRoute';
 
-const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
-const RegistrationPage = lazy(() =>
-  import('./pages/RegistrationPage/RegistrationPage')
-);
 const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage'));
 const ContactsPage = lazy(() => import('./pages/ContactsPage/ContactsPage'));
+const RegistrationPage = lazy(() => import('./pages/RegistrationPage/RegistrationPage'));
 
 function App() {
   const [activeSideBar, setActiveSideBar] = useState(false);
@@ -36,7 +33,7 @@ function App() {
     <Suspense fallback={<AppLoader />}>
       <Layout onCloseSideBar={toggleSideBar}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<LoginPage />} /> {/* Заміна HomePage на LoginPage */}
           <Route
             path="register"
             element={
