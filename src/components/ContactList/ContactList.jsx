@@ -1,165 +1,106 @@
-import { useContext, useId } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFormik } from 'formik';
-import toast from 'react-hot-toast';
-import { editContact } from '../../redux/contacts/operations';
+import { useSelector } from 'react-redux';
 import {
-  selectContactById,
-  selectLoading,
+  selectFilteredContacts,
+  selectIsContactsFetching,
 } from '../../redux/contacts/selectors';
-import { ModalWindowContext } from '../../helpers/context/modal.context';
-import { MODAL_EDIT_CONTACT } from '../../helpers/constants/modalConstants';
-import { addContactSchema as editContactSchema } from '../../helpers/schemasValidation/addContactSchemaValidation.js';
-import AlertMessage from '../ui/AlertMessage/AlertMessage';
+import ContactCard from '../ContactCard/ContactCard';
 
 import {
-  Button,
-  ButtonGroup,
-  CircularProgress,
-  InputAdornment,
-  TextField,
+  Card,
+  CardHeader,
+  List,
+  ListItem,
+  Skeleton,
+  Stack,
   useMediaQuery,
 } from '@mui/material';
-import { Box } from '@mui/system';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import TypographyHeader from '../ui/TypographyHeader/TypographyHeader';
 
-function ContactEditForm() {
-  const dispatch = useDispatch();
-  const isLoading = useSelector(selectLoading);
-  const { getModalData, handleModalClose } = useContext(ModalWindowContext);
+function ContactList() {
+  const contacts = useSelector(selectFilteredContacts);
+  const isContactsFetching = useSelector(selectIsContactsFetching);
+  const isMobile = useMediaQuery('(max-width:600px)');
 
-  const [contact] = useSelector(
-    selectContactById(getModalData(MODAL_EDIT_CONTACT))
-  );
+  const generateCardSkeletons = () => {
+    const cardSkeletons = [];
 
-  const nameFieldId = useId();
-  const numberFieldId = useId();
-
-  const initValues = {
-    name: contact?.name || null,
-    number: contact?.number || null,
-  };
-
-  const formik = useFormik({
-    initialValues: initValues,
-    validationSchema: editContactSchema,
-    onSubmit: handleSubmit,
-  });
-
-  async function handleSubmit(editedContact, actions) {
-    try {
-      await dispatch(
-        editContact({ id: contact.id, ...editedContact })
-      ).unwrap();
-
-      toast.custom(<AlertMessage message="Contact has been edited" />);
-      handleModalClose(MODAL_EDIT_CONTACT);
-      actions.resetForm();
-    } catch (error) {
-      toast.custom(
-        <AlertMessage
-          severity="error"
-          message="Something went wrong. Please, try again!"
-        />
+    for (let i = 0; i < 3; i++) {
+      cardSkeletons.push(
+        <Card variant="outlined" sx={{ flex: '1 1 auto' }} key={i}>
+          <CardHeader
+            avatar={
+              <Skeleton
+                animation="wave"
+                variant="circular"
+                width={40}
+                height={40}
+              />
+            }
+            title={
+              <Skeleton
+                animation="wave"
+                height={10}
+                width="80%"
+                style={{ marginBottom: 6 }}
+              />
+            }
+            subheader={<Skeleton animation="wave" height={10} width="40%" />}
+            sx={{ overflow: 'hidden' }}
+          />
+        </Card>
       );
     }
-  }
 
-  const isScreenXS = useMediaQuery('(max-width:600px)');
-  const circularProgressProp = {
-    size: isScreenXS ? 25 : 40,
+    return cardSkeletons;
   };
 
+  if (contacts.length <= 0 && !isContactsFetching) {
+    return (
+      <TypographyHeader
+        variant="h3"
+        title="There is no contacts"
+        styles={{
+          textAlign: 'center',
+          fontSize: { xs: '1.5rem', sm: '2.5rem', md: '3rem' },
+          my: 5,
+        }}
+      />
+    );
+  }
+
   return (
-    <Box
-      component="form"
-      onSubmit={formik.handleSubmit}
-      autoComplete="off"
-      sx={{
-        mt: 4,
-        flexGrow: '1',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }}
-    >
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <TextField
-          id={nameFieldId}
-          name="name"
-          label="Full name"
-          type="text"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.name && Boolean(formik.errors.name)}
-          helperText={formik.touched.name && formik.errors.name}
-          required
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <AccountCircleOutlinedIcon />
-              </InputAdornment>
-            ),
+    <>
+      {isContactsFetching ? (
+        <Stack direction={isMobile ? 'column' : 'row'} spacing={3}>
+          {generateCardSkeletons()}
+        </Stack>
+      ) : (
+        <List
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: { xs: '15px' },
+            flexWrap: 'wrap',
           }}
-        />
-
-        <TextField
-          id={numberFieldId}
-          name="number"
-          label="Phone number"
-          type="text"
-          value={formik.values.number}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.number && Boolean(formik.errors.number)}
-          helperText={formik.touched.number && formik.errors.number}
-          required
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LocalPhoneOutlinedIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
-
-      <ButtonGroup
-        orientation="vertical"
-        disabled={isLoading}
-        sx={{ gap: '10px', mt: 3 }}
-      >
-        <Button
-          color="primary"
-          variant="contained"
-          fullWidth
-          type="submit"
-          disabled={isLoading}
         >
-          {isLoading ? (
-            <CircularProgress
-              {...circularProgressProp}
-              sx={{ color: 'secondary.main' }}
-            />
-          ) : (
-            'Edit contact'
-          )}
-        </Button>
-
-        <Button
-          variant="text"
-          onClick={() => handleModalClose(MODAL_EDIT_CONTACT)}
-          disabled={isLoading}
-        >
-          Back
-        </Button>
-      </ButtonGroup>
-    </Box>
+          {contacts.map(contact => (
+            <ListItem
+              sx={{
+                padding: '0',
+                flex: {
+                  sm: '1 1 calc(50% - 30px)',
+                  md: '1 1 calc(33.33% - 45px)',
+                },
+              }}
+              key={contact.id}
+            >
+              <ContactCard {...contact} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </>
   );
 }
 
-export default ContactEditForm;
+export default ContactList;

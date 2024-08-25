@@ -9,7 +9,7 @@ import {
 } from '../../redux/contacts/selectors';
 import { ModalWindowContext } from '../../helpers/context/modal.context';
 import { MODAL_EDIT_CONTACT } from '../../helpers/constants/modalConstants';
-import { addContactSchema as editContactSchema } from '../../helpers/schemasValidation/addContactSchemaValidation.js';
+import { addContactSchema as editContactSchema } from '../../helpers/schemasValidation/addContactSchemaValidation';
 import AlertMessage from '../ui/AlertMessage/AlertMessage';
 
 import {
