@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
 import {
   addContact,
   deleteContact,
@@ -7,19 +7,32 @@ import {
 } from './operations';
 import { logout } from '../auth/operations';
 
-const handlePending = state => {
+import { IContactsState } from './types/contactsTypes';
+
+const initialState: IContactsState = {
+  items: [],
+  loading: false,
+  isFetching: false,
+  error: '',
+};
+
+const handlePending = (state: Draft<IContactsState>) => {
   state.loading = true;
   state.error = '';
 };
 
-const handleRejected = (state, action) => {
+const handleRejected = (
+  state: Draft<IContactsState>,
+  action: PayloadAction<string | undefined>
+) => {
   state.loading = false;
-  state.error = action.payload;
+  state.error = action.payload ?? 'Some error occured';
 };
 
 export const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: { items: [], loading: false, isFetching: false, error: '' },
+  initialState,
+  reducers: {},
   extraReducers: builder => {
     builder
       .addCase(fetchContacts.pending, state => {
@@ -35,7 +48,7 @@ export const contactsSlice = createSlice({
       .addCase(fetchContacts.rejected, (state, action) => {
         state.isFetching = false;
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload ?? 'Some error occured';
       })
       .addCase(addContact.pending, handlePending)
       .addCase(addContact.fulfilled, (state, action) => {
@@ -72,4 +85,4 @@ export const contactsSlice = createSlice({
   },
 });
 
-export const contactsReducer = contactsSlice.reducer;
+export const contactReducer = contactsSlice.reducer;
