@@ -1,0 +1,25 @@
+.nav {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.link {
+    box-shadow: 8px 8px 24px 0px aquamarine;
+    cursor: pointer;
+    text-align: center;
+    min-width: 80px;
+    height: 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: aqua;
+    color: blueviolet;
+    margin-right: 20px;
+
+    &:hover,
+    &:focus {
+        background-color: aquamarine;
+        box-shadow: 8px 8px 24px 0px rgba(0, 203, 255, 1);
+        color: black;
+    }
+}

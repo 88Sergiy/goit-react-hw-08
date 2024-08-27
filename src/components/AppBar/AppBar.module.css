@@ -1,0 +1,9 @@
+.header {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+    margin: 0 auto;
+    border-bottom: 1px solid rgb(204, 1, 231);
+}

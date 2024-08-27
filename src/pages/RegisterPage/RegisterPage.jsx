@@ -1,32 +1,37 @@
 import { Field, Form, Formik } from "formik";
-import css from "./LoginPage.module.css";
-import { logIn } from "../../redux/auth/operations";
+import css from "./RegisterPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { register } from "../../redux/auth/operations";
 import { selectIsLoggedIn } from "../../redux/auth/selectors";
-import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-const LoginPage = () => {
+const RegistrationPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLogin = useSelector(selectIsLoggedIn);
-  useEffect(() => {
-    if (isLogin) {
-      navigate("/contacts");
-    }
-  }, [isLogin, navigate]);
-
   return (
     <>
       <div className={css.div}>
-        <h2 className={css.title}>LOGIN</h2>
+        <h2>REGISTRATION</h2>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ email: "", password: "", name: "" }}
           onSubmit={(values) => {
-            dispatch(logIn(values));
+            dispatch(register(values));
+            if (isLogin) {
+              navigate("/contacts");
+            }
           }}
         >
           <Form className={css.form}>
+            <label htmlFor="name" className={css.label}>
+              Name
+              <Field
+                name="name"
+                type="text"
+                placeholder="Please enter your name"
+                className={css.input}
+              />
+            </label>
             <label htmlFor="email" className={css.label}>
               Email
               <Field
@@ -47,11 +52,11 @@ const LoginPage = () => {
               />
             </label>
             <button className={css.btn} type="submit">
-              Log In
+              Register
             </button>
-            <Link className={css.link} to="/register">
+            <Link className={css.link} to="/login">
               {" "}
-              Do not have an account? Register here
+              Already have an account? Log in
             </Link>
           </Form>
         </Formik>
@@ -60,4 +65,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegistrationPage;

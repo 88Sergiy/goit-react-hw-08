@@ -1,0 +1,47 @@
+.div {
+    padding-top: 30px;
+}
+
+.label {
+    color: white;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 8px;
+}
+
+.input {
+    border: none;
+    border-radius: 5px;
+    height: 40px;
+    box-shadow: 8px 8px 24px 0px rgb(140, 0, 255);
+}
+
+.btn {
+    box-shadow: 8px 8px 24px 0px aquamarine;
+    cursor: pointer;
+    min-width: 80px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background-color: aqua;
+    color: blueviolet;
+    margin-right: 20px;
+
+    &:hover,
+    &:focus {
+        background-color: aquamarine;
+        box-shadow: 8px 8px 24px 0px rgb(81, 0, 255);
+        color: black;
+    }
+}
+
+.link {
+    color: red;
+}

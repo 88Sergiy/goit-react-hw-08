@@ -1,18 +1,11 @@
-import PropTypes from 'prop-types';
-import AppBar from '../AppBar/AppBar';
+import { Suspense } from "react";
+import AppBar from "../AppBar/AppBar";
 
-function Layout({ onCloseSideBar, children }) {
+export const Layout = ({ children }) => {
   return (
-    <>
-      <AppBar onCloseSideBar={onCloseSideBar} />
-      <main>{children}</main>
-    </>
+    <div style={{ margin: "0 auto" }}>
+      <AppBar />
+      <Suspense fallback={null}>{children}</Suspense>
+    </div>
   );
-}
-
-Layout.propTypes = {
-  children: PropTypes.node,
-  onCloseSideBar: PropTypes.func,
 };
-
-export default Layout;
