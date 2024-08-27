@@ -2,9 +2,9 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { selectFilterValue } from '../filters/selectors';
 
-export const selectContacts = (state: RootState) => state.contacts.items;
-export const selectLoading = (state: RootState) => state.contacts.loading;
-export const selectIsContactsFetching = (state: RootState) =>
+export const selectLoading = (state: RootState) => state.contact.loading;
+export const selectContacts = (state: RootState) => state.contact.items;
+export const selectContactsFetching = (state: RootState) =>
   state.contacts.isFetching;
 export const selectError = (state: RootState) => state.contacts.error;
 
